@@ -28,3 +28,6 @@ class NasaClient:
         except requests.RequestException as error:
             print(f"API fout: {error}")
             return None
+
+    def get_apod(self):
+        return self.get("/planetary/apod")
