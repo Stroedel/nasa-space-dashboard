@@ -13,3 +13,5 @@ def main():
         clear_screen()
         print_header()
         print_menu()
+
+        choice = input("Kies een optie: ")
