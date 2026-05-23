@@ -61,6 +61,40 @@ def show_mars_photos(client):
         print(f"Sol: {photo['sol']}")
         print(f"Foto: {photo['img_src']}")
 
+
+def show_asteroids(client):
+    chosen_date = input("Geef datum (YYYY-MM-DD) of Enter voor vandaag: ")
+
+    if chosen_date == "":
+        chosen_date = date.today().isoformat()
+
+    data = client.get_asteroids(chosen_date)
+
+    if not data:
+        return
+
+    objects = data.get("near_earth_objects", {}).get(chosen_date, [])
+
+    if not objects:
+        print("Geen asteroïden gevonden.")
+        return
+
+    print(f"\nAsteroïden op {chosen_date}: {len(objects)}")
+
+    for asteroid in objects[:5]:
+        diameter = asteroid["estimated_diameter"]["meters"]
+        approach = asteroid["close_approach_data"][0]
+
+        print("-" * 45)
+        print(f"Naam: {asteroid['name']}")
+        print(f"Gevaarlijk: {asteroid['is_potentially_hazardous_asteroid']}")
+        print(
+            f"Diameter: {diameter['estimated_diameter_min']:.2f} - "
+            f"{diameter['estimated_diameter_max']:.2f} meter"
+        )
+        print(f"Afstand: {approach['miss_distance']['kilometers']} km")
+
+
 def main():
     client = NasaClient()
 
@@ -77,6 +111,14 @@ def main():
 
         if choice == "1":
             show_apod(client)
+            pause()
+
+        elif choice == "2":
+            show_mars_photos(client)
+            pause()
+
+        elif choice == "3":
+            show_asteroids(client)
             pause()
 
         elif choice == "4":
