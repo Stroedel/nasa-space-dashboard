@@ -23,3 +23,5 @@ def main():
         else:
             print("Functionaliteit komt later.")
             pause()
+if __name__ == "__main__":
+    main()
