@@ -32,14 +32,22 @@ class NasaClient:
     def get_apod(self):
         return self.get("/planetary/apod")
 
-    def get_mars_photos(self, rover, date):
-        endpoint = f"/mars-photos/api/v1/rovers/{rover}/photos"
+    def search_images(self, query):
+        url = "https://images-api.nasa.gov/search"
 
         params = {
-            "earth_date": date
+            "q": query,
+            "media_type": "image"
         }
 
-        return self.get(endpoint, params)
+        try:
+            response = requests.get(url, params=params, timeout=10)
+            response.raise_for_status()
+            return response.json()
+
+        except requests.RequestException:
+            print("API fout: er ging iets mis bij het zoeken naar afbeeldingen.")
+            return None
 
     def get_asteroids(self, date):
         return self.get(

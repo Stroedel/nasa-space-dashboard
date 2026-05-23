@@ -18,7 +18,7 @@ def print_header():
 
 def print_menu():
     print("1. Astronomy Picture of the Day")
-    print("2. Mars Rover foto's zoeken")
+    print("2. NASA afbeeldingen zoeken")
     print("3. Asteroïden bekijken")
     print("4. Stoppen")
     print("-" * 45)
