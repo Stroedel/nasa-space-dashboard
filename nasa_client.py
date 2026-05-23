@@ -37,3 +37,13 @@ class NasaClient:
             f"/mars-photos/api/v1/rovers/{rover}/photos",
             {"earth_date": date}
         )
+
+    def get_asteroids(self, date):
+        return self.get(
+            "/neo/rest/v1/feed",
+            {
+                "start_date": date,
+                "end_date": date
+            }
+        )
+    
