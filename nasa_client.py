@@ -25,8 +25,8 @@ class NasaClient:
             response.raise_for_status()
             return response.json()
 
-        except requests.RequestException as error:
-            print(f"API fout: {error}")
+        except requests.RequestException:
+            print("API fout: er ging iets mis bij het ophalen van data.")
             return None
 
     def get_apod(self):
