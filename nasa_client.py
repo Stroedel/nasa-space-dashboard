@@ -31,3 +31,9 @@ class NasaClient:
 
     def get_apod(self):
         return self.get("/planetary/apod")
+
+    def get_mars_photos(self, rover, date):
+        return self.get(
+            f"/mars-photos/api/v1/rovers/{rover}/photos",
+            {"earth_date": date}
+        )
