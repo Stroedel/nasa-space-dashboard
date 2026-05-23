@@ -8,3 +8,8 @@ def main():
     if not client.api_key:
         print("Geen NASA API key gevonden.")
         return
+
+    while True:
+        clear_screen()
+        print_header()
+        print_menu()
