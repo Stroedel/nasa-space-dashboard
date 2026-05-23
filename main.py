@@ -1,3 +1,5 @@
+from datetime import date
+
 from nasa_client import NasaClient
 from utils import clear_screen, print_header, print_menu, pause
 
@@ -16,6 +18,48 @@ def show_apod(client):
     print(f"URL: {data.get('url')}")
     print(f"\nUitleg:\n{data.get('explanation')}")
 
+
+def show_mars_photos(client):
+    print("\nBeschikbare rovers:")
+    print("1. curiosity")
+    print("2. opportunity")
+    print("3. spirit")
+    print("4. perseverance")
+
+    rovers = {
+        "1": "curiosity",
+        "2": "opportunity",
+        "3": "spirit",
+        "4": "perseverance"
+    }
+
+    choice = input("Kies rover: ")
+    rover = rovers.get(choice)
+
+    if not rover:
+        print("Ongeldige rover.")
+        return
+
+    chosen_date = input("Geef datum (YYYY-MM-DD): ")
+    data = client.get_mars_photos(rover, chosen_date)
+
+    if not data:
+        return
+
+    photos = data.get("photos", [])
+
+    if not photos:
+        print("Geen foto's gevonden.")
+        return
+
+    print(f"\nAantal gevonden foto's: {len(photos)}")
+
+    for photo in photos[:5]:
+        print("-" * 45)
+        print(f"Rover: {photo['rover']['name']}")
+        print(f"Camera: {photo['camera']['full_name']}")
+        print(f"Sol: {photo['sol']}")
+        print(f"Foto: {photo['img_src']}")
 
 def main():
     client = NasaClient()
