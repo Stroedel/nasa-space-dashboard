@@ -15,3 +15,7 @@ def main():
         print_menu()
 
         choice = input("Kies een optie: ")
+
+        if choice == "4":
+            print("Programma gestopt.")
+            break
