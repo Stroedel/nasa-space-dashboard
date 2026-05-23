@@ -19,3 +19,7 @@ def main():
         if choice == "4":
             print("Programma gestopt.")
             break
+
+        else:
+            print("Functionaliteit komt later.")
+            pause()
