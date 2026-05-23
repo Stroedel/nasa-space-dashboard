@@ -1,10 +1,11 @@
 from datetime import date
 
 from nasa_client import NasaClient
-from utils import clear_screen, print_header, print_menu, pause
+from utils import clear_screen, print_header, print_menu, pause, loading
 
 
 def show_apod(client):
+    loading("Foto van de dag ophalen")
     data = client.get_apod()
 
     if not data:
@@ -19,47 +20,43 @@ def show_apod(client):
     print(f"\nUitleg:\n{data.get('explanation')}")
 
 
-def show_mars_photos(client):
-    print("\nBeschikbare rovers:")
-    print("1. curiosity")
-    print("2. opportunity")
-    print("3. spirit")
-    print("4. perseverance")
+def show_image_search(client):
+    query = input("Waar wil je NASA afbeeldingen van zoeken? ")
 
-    rovers = {
-        "1": "curiosity",
-        "2": "opportunity",
-        "3": "spirit",
-        "4": "perseverance"
-    }
-
-    choice = input("Kies rover: ")
-    rover = rovers.get(choice)
-
-    if not rover:
-        print("Ongeldige rover.")
+    if query == "":
+        print("Je moet een zoekterm ingeven.")
         return
 
-    chosen_date = input("Geef datum (YYYY-MM-DD): ")
-    data = client.get_mars_photos(rover, chosen_date)
+    loading("Afbeeldingen zoeken")
+    data = client.search_images(query)
 
     if not data:
         return
 
-    photos = data.get("photos", [])
+    items = data.get("collection", {}).get("items", [])
 
-    if not photos:
-        print("Geen foto's gevonden.")
+    if not items:
+        print("Geen afbeeldingen gevonden.")
         return
 
-    print(f"\nAantal gevonden foto's: {len(photos)}")
+    print(f"\nGevonden resultaten voor '{query}':")
 
-    for photo in photos[:5]:
+    for item in items[:5]:
+        info = item.get("data", [{}])[0]
+        links = item.get("links", [{}])
+
         print("-" * 45)
-        print(f"Rover: {photo['rover']['name']}")
-        print(f"Camera: {photo['camera']['full_name']}")
-        print(f"Sol: {photo['sol']}")
-        print(f"Foto: {photo['img_src']}")
+        print(f"Titel: {info.get('title')}")
+        print(f"Datum: {info.get('date_created')}")
+        print(
+            f"Beschrijving: "
+            f"{info.get('description', 'Geen beschrijving')[:150]}..."
+        )
+
+        if links:
+            print(f"Afbeelding: {links[0].get('href')}")
+        else:
+            print("Afbeelding: geen link beschikbaar")
 
 
 def show_asteroids(client):
@@ -68,6 +65,7 @@ def show_asteroids(client):
     if chosen_date == "":
         chosen_date = date.today().isoformat()
 
+    loading("Asteroïden ophalen")
     data = client.get_asteroids(chosen_date)
 
     if not data:
@@ -100,6 +98,7 @@ def main():
 
     if not client.api_key:
         print("Geen NASA API key gevonden.")
+        print("Maak een .env bestand met NASA_API_KEY=je_key")
         return
 
     while True:
@@ -114,7 +113,7 @@ def main():
             pause()
 
         elif choice == "2":
-            show_mars_photos(client)
+            show_image_search(client)
             pause()
 
         elif choice == "3":
