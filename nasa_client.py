@@ -33,10 +33,13 @@ class NasaClient:
         return self.get("/planetary/apod")
 
     def get_mars_photos(self, rover, date):
-        return self.get(
-            f"/mars-photos/api/v1/rovers/{rover}/photos",
-            {"earth_date": date}
-        )
+        endpoint = f"/mars-photos/api/v1/rovers/{rover}/photos"
+
+        params = {
+            "earth_date": date
+        }
+
+        return self.get(endpoint, params)
 
     def get_asteroids(self, date):
         return self.get(
@@ -46,4 +49,3 @@ class NasaClient:
                 "end_date": date
             }
         )
-    
