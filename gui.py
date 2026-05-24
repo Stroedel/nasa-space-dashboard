@@ -52,7 +52,10 @@ def display_current_image():
     show_image_from_url(image_url)
 
     clear_result()
-    result_text.insert(tk.END, f"Afbeelding {current_index + 1} van {len(current_images)}\n")
+    result_text.insert(
+        tk.END,
+        f"Afbeelding {current_index + 1} van {len(current_images)}\n"
+    )
     result_text.insert(tk.END, "-" * 60 + "\n")
     result_text.insert(tk.END, f"URL: {image_url}\n")
 
@@ -83,6 +86,9 @@ def show_apod():
 
     if data.get("media_type") == "image":
         show_image_from_url(image_url)
+    else:
+        image_label.config(image="")
+        image_label.image = None
 
 
 def search_images():
@@ -108,9 +114,14 @@ def search_images():
     items = data.get("collection", {}).get("items", [])
 
     clear_result()
-
     current_images = []
     current_index = 0
+
+    if not items:
+        result_text.insert(tk.END, "Geen afbeeldingen gevonden.")
+        image_label.config(image="")
+        image_label.image = None
+        return
 
     for item in items[:20]:
         links = item.get("links", [])
@@ -123,6 +134,8 @@ def search_images():
 
     if not current_images:
         result_text.insert(tk.END, "Geen bruikbare afbeeldingen gevonden.")
+        image_label.config(image="")
+        image_label.image = None
         return
 
     display_current_image()
@@ -160,7 +173,6 @@ def show_asteroids_week():
         tk.END,
         f"Bezig met asteroïden ophalen van {start_date} tot {end_date}...\n\n"
     )
-
     root.update()
 
     data = client.get_asteroids_week(start_date, end_date)
@@ -178,6 +190,10 @@ def show_asteroids_week():
         tk.END,
         f"Asteroïden van {start_date} tot {end_date}: {total}\n\n"
     )
+
+    if total == 0:
+        result_text.insert(tk.END, "Geen asteroïden gevonden deze week.")
+        return
 
     for day, objects in near_objects.items():
         result_text.insert(tk.END, f"Datum: {day}\n")
@@ -206,6 +222,8 @@ def show_asteroids_week():
                 )
 
             result_text.insert(tk.END, "\n")
+
+        result_text.insert(tk.END, "\n")
 
 
 root = tk.Tk()
@@ -274,26 +292,10 @@ year_label = tk.Label(
     bg="#151b2e",
     fg="white"
 )
+year_label.grid(row=0, column=2, padx=8, pady=4)
 
-year_label.grid(
-    row=0,
-    column=2,
-    padx=8,
-    pady=4
-)
-
-image_year_entry = tk.Entry(
-    control_frame,
-    width=20
-)
-
-image_year_entry.grid(
-    row=1,
-    column=2,
-    padx=8,
-    pady=4
-)
-
+image_year_entry = tk.Entry(control_frame, width=20)
+image_year_entry.grid(row=1, column=2, padx=8, pady=4)
 image_year_entry.insert(0, "1969")
 
 search_button = tk.Button(
@@ -304,14 +306,7 @@ search_button = tk.Button(
     bg="#2563eb",
     fg="white"
 )
-
-search_button.grid(
-    row=2,
-    column=1,
-    columnspan=2,
-    padx=8,
-    pady=8
-)
+search_button.grid(row=2, column=1, columnspan=2, padx=8, pady=8)
 
 asteroid_button = tk.Button(
     control_frame,
@@ -321,19 +316,9 @@ asteroid_button = tk.Button(
     bg="#0891b2",
     fg="white"
 )
+asteroid_button.grid(row=3, column=0, columnspan=3, pady=8)
 
-asteroid_button.grid(
-    row=3,
-    column=0,
-    columnspan=3,
-    pady=8
-)
-
-nav_frame = tk.Frame(
-    root,
-    bg="#0b1020"
-)
-
+nav_frame = tk.Frame(root, bg="#0b1020")
 nav_frame.pack(pady=5)
 
 previous_button = tk.Button(
@@ -344,11 +329,7 @@ previous_button = tk.Button(
     bg="#334155",
     fg="white"
 )
-
-previous_button.pack(
-    side=tk.LEFT,
-    padx=10
-)
+previous_button.pack(side=tk.LEFT, padx=10)
 
 next_button = tk.Button(
     nav_frame,
@@ -358,11 +339,7 @@ next_button = tk.Button(
     bg="#334155",
     fg="white"
 )
-
-next_button.pack(
-    side=tk.LEFT,
-    padx=10
-)
+next_button.pack(side=tk.LEFT, padx=10)
 
 image_label = tk.Label(
     root,
@@ -370,16 +347,9 @@ image_label = tk.Label(
     width=500,
     height=360
 )
-
 image_label.pack(pady=10)
 
-result_frame = tk.Frame(
-    root,
-    bg="#151b2e",
-    padx=10,
-    pady=10
-)
-
+result_frame = tk.Frame(root, bg="#151b2e", padx=10, pady=10)
 result_frame.pack(pady=10)
 
 result_text = tk.Text(
@@ -391,7 +361,6 @@ result_text = tk.Text(
     fg="#e5e7eb",
     insertbackground="white"
 )
-
 result_text.pack()
 
 root.mainloop()
