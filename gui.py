@@ -364,4 +364,13 @@ next_button.pack(
     padx=10
 )
 
+image_label = tk.Label(
+    root,
+    bg="#0b1020",
+    width=500,
+    height=360
+)
+
+image_label.pack(pady=10)
+
 root.mainloop()
