@@ -237,4 +237,25 @@ control_frame = tk.Frame(
 )
 control_frame.pack(pady=15)
 
+apod_label = tk.Label(
+    control_frame,
+    text="APOD datum (YYYY-MM-DD, leeg = vandaag)",
+    bg="#151b2e",
+    fg="white"
+)
+apod_label.grid(row=0, column=0, padx=8, pady=4)
+
+apod_date_entry = tk.Entry(control_frame, width=28)
+apod_date_entry.grid(row=1, column=0, padx=8, pady=4)
+
+apod_button = tk.Button(
+    control_frame,
+    text="APOD tonen",
+    command=show_apod,
+    width=24,
+    bg="#4f46e5",
+    fg="white"
+)
+apod_button.grid(row=2, column=0, padx=8, pady=8)
+
 root.mainloop()
