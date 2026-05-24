@@ -205,5 +205,28 @@ root.title("NASA Space Dashboard")
 root.geometry("1050x850")
 root.resizable(False, False)
 root.configure(bg="#0b1020")
+root = tk.Tk()
+root.title("NASA Space Dashboard")
+root.geometry("1050x850")
+root.resizable(False, False)
+root.configure(bg="#0b1020")
+
+title_label = tk.Label(
+    root,
+    text="NASA Space Dashboard 🚀",
+    font=("Arial", 26, "bold"),
+    bg="#0b1020",
+    fg="white"
+)
+title_label.pack(pady=15)
+
+subtitle_label = tk.Label(
+    root,
+    text="APOD bekijken • NASA afbeeldingen zoeken • Asteroïden deze week",
+    font=("Arial", 11),
+    bg="#0b1020",
+    fg="#b8c1ec"
+)
+subtitle_label.pack(pady=2)
 
 root.mainloop()
