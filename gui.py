@@ -116,6 +116,64 @@ def show_apod():
         show_image_from_url(image_url)
 
 
+def search_images():
+    global current_images
+    global current_index
+
+    query = search_entry.get().strip()
+    year = image_year_entry.get().strip()
+
+    if query == "":
+        messagebox.showwarning(
+            "Leeg veld",
+            "Geef eerst een zoekterm in."
+        )
+        return
+
+    if year == "":
+        data = client.search_images(query)
+    else:
+        data = client.search_images(query, year)
+
+    if not data:
+        messagebox.showerror(
+            "Fout",
+            "Kon afbeeldingen niet ophalen."
+        )
+        return
+
+    items = data.get(
+        "collection",
+        {}
+    ).get(
+        "items",
+        []
+    )
+
+    clear_result()
+
+    current_images = []
+    current_index = 0
+
+    for item in items[:20]:
+        links = item.get("links", [])
+
+        if links:
+            image_url = links[0].get("href")
+
+            if image_url:
+                current_images.append(image_url)
+
+    if not current_images:
+        result_text.insert(
+            tk.END,
+            "Geen bruikbare afbeeldingen gevonden."
+        )
+        return
+
+    display_current_image()
+
+
 root = tk.Tk()
 root.title("NASA Space Dashboard")
 
