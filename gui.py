@@ -13,6 +13,11 @@ def clear_result():
     result_text.delete("1.0", tk.END)
 
 
+def reset_image_area():
+    image_label.pack(pady=10)
+    result_text.config(height=8)
+
+
 root = tk.Tk()
 root.title("NASA Space Dashboard")
 
