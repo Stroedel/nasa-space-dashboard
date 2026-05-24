@@ -282,4 +282,18 @@ year_label.grid(
     pady=4
 )
 
+image_year_entry = tk.Entry(
+    control_frame,
+    width=20
+)
+
+image_year_entry.grid(
+    row=1,
+    column=2,
+    padx=8,
+    pady=4
+)
+
+image_year_entry.insert(0, "1969")
+
 root.mainloop()
