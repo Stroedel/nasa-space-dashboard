@@ -373,4 +373,13 @@ image_label = tk.Label(
 
 image_label.pack(pady=10)
 
+result_frame = tk.Frame(
+    root,
+    bg="#151b2e",
+    padx=10,
+    pady=10
+)
+
+result_frame.pack(pady=10)
+
 root.mainloop()
