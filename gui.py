@@ -229,4 +229,12 @@ subtitle_label = tk.Label(
 )
 subtitle_label.pack(pady=2)
 
+control_frame = tk.Frame(
+    root,
+    bg="#151b2e",
+    padx=20,
+    pady=15
+)
+control_frame.pack(pady=15)
+
 root.mainloop()
