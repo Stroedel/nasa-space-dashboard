@@ -350,4 +350,18 @@ previous_button.pack(
     padx=10
 )
 
+next_button = tk.Button(
+    nav_frame,
+    text="Volgende afbeelding ➡",
+    command=next_image,
+    width=22,
+    bg="#334155",
+    fg="white"
+)
+
+next_button.pack(
+    side=tk.LEFT,
+    padx=10
+)
+
 root.mainloop()
