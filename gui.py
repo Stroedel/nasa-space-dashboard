@@ -1,8 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
+from datetime import date, timedelta
 from urllib.request import urlopen
 from io import BytesIO
-from datetime import date, timedelta
+
 from PIL import Image, ImageTk
 
 from nasa_client import NasaClient
@@ -26,18 +27,13 @@ def reset_image_area():
 def show_image_from_url(url):
     try:
         reset_image_area()
-
         image_bytes = urlopen(url).read()
         data_stream = BytesIO(image_bytes)
-
         pil_image = Image.open(data_stream)
         pil_image.thumbnail((480, 360))
-
         tk_image = ImageTk.PhotoImage(pil_image)
-
         image_label.config(image=tk_image)
         image_label.image = tk_image
-
     except Exception:
         image_label.config(image="")
         image_label.image = None
@@ -51,12 +47,7 @@ def display_current_image():
     show_image_from_url(image_url)
 
     clear_result()
-
-    result_text.insert(
-        tk.END,
-        f"Afbeelding {current_index + 1} van {len(current_images)}\n"
-    )
-
+    result_text.insert(tk.END, f"Afbeelding {current_index + 1} van {len(current_images)}\n")
     result_text.insert(tk.END, "-" * 60 + "\n")
     result_text.insert(tk.END, f"URL: {image_url}\n")
 
@@ -70,47 +61,19 @@ def show_apod():
         data = client.get_apod(chosen_date)
 
     if not data:
-        messagebox.showerror(
-            "Fout",
-            "Kon APOD data niet ophalen."
-        )
+        messagebox.showerror("Fout", "Kon APOD data niet ophalen.")
         return
 
     clear_result()
-
     image_url = data.get("url")
 
-    result_text.insert(
-        tk.END,
-        "Astronomy Picture of the Day\n"
-    )
-
+    result_text.insert(tk.END, "Astronomy Picture of the Day\n")
     result_text.insert(tk.END, "-" * 60 + "\n")
-
-    result_text.insert(
-        tk.END,
-        f"Titel: {data.get('title')}\n"
-    )
-
-    result_text.insert(
-        tk.END,
-        f"Datum: {data.get('date')}\n"
-    )
-
-    result_text.insert(
-        tk.END,
-        f"Type: {data.get('media_type')}\n"
-    )
-
-    result_text.insert(
-        tk.END,
-        f"URL: {image_url}\n\n"
-    )
-
-    result_text.insert(
-        tk.END,
-        data.get("explanation")
-    )
+    result_text.insert(tk.END, f"Titel: {data.get('title')}\n")
+    result_text.insert(tk.END, f"Datum: {data.get('date')}\n")
+    result_text.insert(tk.END, f"Type: {data.get('media_type')}\n")
+    result_text.insert(tk.END, f"URL: {image_url}\n\n")
+    result_text.insert(tk.END, data.get("explanation"))
 
     if data.get("media_type") == "image":
         show_image_from_url(image_url)
@@ -124,10 +87,7 @@ def search_images():
     year = image_year_entry.get().strip()
 
     if query == "":
-        messagebox.showwarning(
-            "Leeg veld",
-            "Geef eerst een zoekterm in."
-        )
+        messagebox.showwarning("Leeg veld", "Geef eerst een zoekterm in.")
         return
 
     if year == "":
@@ -136,22 +96,12 @@ def search_images():
         data = client.search_images(query, year)
 
     if not data:
-        messagebox.showerror(
-            "Fout",
-            "Kon afbeeldingen niet ophalen."
-        )
+        messagebox.showerror("Fout", "Kon afbeeldingen niet ophalen.")
         return
 
-    items = data.get(
-        "collection",
-        {}
-    ).get(
-        "items",
-        []
-    )
+    items = data.get("collection", {}).get("items", [])
 
     clear_result()
-
     current_images = []
     current_index = 0
 
@@ -165,13 +115,27 @@ def search_images():
                 current_images.append(image_url)
 
     if not current_images:
-        result_text.insert(
-            tk.END,
-            "Geen bruikbare afbeeldingen gevonden."
-        )
+        result_text.insert(tk.END, "Geen bruikbare afbeeldingen gevonden.")
         return
 
     display_current_image()
+
+
+def next_image():
+    global current_index
+
+    if current_images:
+        current_index = (current_index + 1) % len(current_images)
+        display_current_image()
+
+
+def previous_image():
+    global current_index
+
+    if current_images:
+        current_index = (current_index - 1) % len(current_images)
+        display_current_image()
+
 
 def show_asteroids_week():
     start = date.today()
@@ -181,7 +145,6 @@ def show_asteroids_week():
     end_date = end.isoformat()
 
     clear_result()
-
     image_label.pack_forget()
     result_text.config(height=24)
 
@@ -192,29 +155,16 @@ def show_asteroids_week():
 
     root.update()
 
-    data = client.get_asteroids_week(
-        start_date,
-        end_date
-    )
+    data = client.get_asteroids_week(start_date, end_date)
 
     clear_result()
 
     if not data:
-        result_text.insert(
-            tk.END,
-            "Geen data ontvangen van NASA.\n"
-        )
+        result_text.insert(tk.END, "Geen data ontvangen van NASA.\n")
         return
 
-    near_objects = data.get(
-        "near_earth_objects",
-        {}
-    )
-
-    total = sum(
-        len(objects)
-        for objects in near_objects.values()
-    )
+    near_objects = data.get("near_earth_objects", {})
+    total = sum(len(objects) for objects in near_objects.values())
 
     result_text.insert(
         tk.END,
@@ -222,66 +172,38 @@ def show_asteroids_week():
     )
 
     for day, objects in near_objects.items():
-        result_text.insert(
-            tk.END,
-            f"Datum: {day}\n"
-        )
-
-        result_text.insert(
-            tk.END,
-            "-" * 60 + "\n"
-        )
+        result_text.insert(tk.END, f"Datum: {day}\n")
+        result_text.insert(tk.END, "-" * 60 + "\n")
 
         for asteroid in objects[:3]:
-            diameter = asteroid[
-                "estimated_diameter"
-            ]["meters"]
+            diameter = asteroid["estimated_diameter"]["meters"]
+            approach_data = asteroid.get("close_approach_data", [])
 
-            approach_data = asteroid.get(
-                "close_approach_data",
-                []
-            )
-
+            result_text.insert(tk.END, f"Naam: {asteroid['name']}\n")
             result_text.insert(
                 tk.END,
-                f"Naam: {asteroid['name']}\n"
+                f"Gevaarlijk: {asteroid['is_potentially_hazardous_asteroid']}\n"
             )
-
             result_text.insert(
                 tk.END,
-                f"Gevaarlijk: "
-                f"{asteroid['is_potentially_hazardous_asteroid']}\n"
-            )
-
-            result_text.insert(
-                tk.END,
-                f"Diameter: "
-                f"{diameter['estimated_diameter_min']:.2f} - "
+                f"Diameter: {diameter['estimated_diameter_min']:.2f} - "
                 f"{diameter['estimated_diameter_max']:.2f} meter\n"
             )
 
             if approach_data:
                 approach = approach_data[0]
-
                 result_text.insert(
                     tk.END,
-                    f"Afstand: "
-                    f"{approach['miss_distance']['kilometers']} km\n"
+                    f"Afstand: {approach['miss_distance']['kilometers']} km\n"
                 )
 
             result_text.insert(tk.END, "\n")
 
-def next_image():
-    global current_index
-
-    if current_images:
-        current_index = (
-            current_index + 1
-        ) % len(current_images)
-
-        display_current_image()
 
 root = tk.Tk()
 root.title("NASA Space Dashboard")
+root.geometry("1050x850")
+root.resizable(False, False)
+root.configure(bg="#0b1020")
 
 root.mainloop()
