@@ -268,4 +268,18 @@ search_entry = tk.Entry(control_frame, width=28)
 search_entry.grid(row=1, column=1, padx=8, pady=4)
 search_entry.insert(0, "moon")
 
+year_label = tk.Label(
+    control_frame,
+    text="Jaar afbeelding",
+    bg="#151b2e",
+    fg="white"
+)
+
+year_label.grid(
+    row=0,
+    column=2,
+    padx=8,
+    pady=4
+)
+
 root.mainloop()
