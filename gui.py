@@ -382,4 +382,16 @@ result_frame = tk.Frame(
 
 result_frame.pack(pady=10)
 
+result_text = tk.Text(
+    result_frame,
+    wrap="word",
+    height=8,
+    width=115,
+    bg="#020617",
+    fg="#e5e7eb",
+    insertbackground="white"
+)
+
+result_text.pack()
+
 root.mainloop()
