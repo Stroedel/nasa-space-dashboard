@@ -313,4 +313,20 @@ search_button.grid(
     pady=8
 )
 
+asteroid_button = tk.Button(
+    control_frame,
+    text="Asteroïden deze week bekijken",
+    command=show_asteroids_week,
+    width=35,
+    bg="#0891b2",
+    fg="white"
+)
+
+asteroid_button.grid(
+    row=3,
+    column=0,
+    columnspan=3,
+    pady=8
+)
+
 root.mainloop()
