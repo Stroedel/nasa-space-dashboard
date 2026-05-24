@@ -329,4 +329,11 @@ asteroid_button.grid(
     pady=8
 )
 
+nav_frame = tk.Frame(
+    root,
+    bg="#0b1020"
+)
+
+nav_frame.pack(pady=5)
+
 root.mainloop()
