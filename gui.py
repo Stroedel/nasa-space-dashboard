@@ -27,13 +27,18 @@ def reset_image_area():
 def show_image_from_url(url):
     try:
         reset_image_area()
+
         image_bytes = urlopen(url).read()
         data_stream = BytesIO(image_bytes)
+
         pil_image = Image.open(data_stream)
         pil_image.thumbnail((480, 360))
+
         tk_image = ImageTk.PhotoImage(pil_image)
+
         image_label.config(image=tk_image)
         image_label.image = tk_image
+
     except Exception:
         image_label.config(image="")
         image_label.image = None
@@ -65,6 +70,7 @@ def show_apod():
         return
 
     clear_result()
+
     image_url = data.get("url")
 
     result_text.insert(tk.END, "Astronomy Picture of the Day\n")
@@ -102,6 +108,7 @@ def search_images():
     items = data.get("collection", {}).get("items", [])
 
     clear_result()
+
     current_images = []
     current_index = 0
 
@@ -145,6 +152,7 @@ def show_asteroids_week():
     end_date = end.isoformat()
 
     clear_result()
+
     image_label.pack_forget()
     result_text.config(height=24)
 
@@ -205,11 +213,6 @@ root.title("NASA Space Dashboard")
 root.geometry("1050x850")
 root.resizable(False, False)
 root.configure(bg="#0b1020")
-root = tk.Tk()
-root.title("NASA Space Dashboard")
-root.geometry("1050x850")
-root.resizable(False, False)
-root.configure(bg="#0b1020")
 
 title_label = tk.Label(
     root,
@@ -229,12 +232,7 @@ subtitle_label = tk.Label(
 )
 subtitle_label.pack(pady=2)
 
-control_frame = tk.Frame(
-    root,
-    bg="#151b2e",
-    padx=20,
-    pady=15
-)
+control_frame = tk.Frame(root, bg="#151b2e", padx=20, pady=15)
 control_frame.pack(pady=15)
 
 apod_label = tk.Label(
@@ -257,5 +255,13 @@ apod_button = tk.Button(
     fg="white"
 )
 apod_button.grid(row=2, column=0, padx=8, pady=8)
+
+search_label = tk.Label(
+    control_frame,
+    text="Zoekterm afbeelding",
+    bg="#151b2e",
+    fg="white"
+)
+search_label.grid(row=0, column=1, padx=8, pady=4)
 
 root.mainloop()
