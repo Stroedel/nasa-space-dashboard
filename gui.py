@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from urllib.request import urlopen
 from io import BytesIO
 
@@ -58,6 +59,61 @@ def display_current_image():
 
     result_text.insert(tk.END, "-" * 60 + "\n")
     result_text.insert(tk.END, f"URL: {image_url}\n")
+
+
+def show_apod():
+    chosen_date = apod_date_entry.get().strip()
+
+    if chosen_date == "":
+        data = client.get_apod()
+    else:
+        data = client.get_apod(chosen_date)
+
+    if not data:
+        messagebox.showerror(
+            "Fout",
+            "Kon APOD data niet ophalen."
+        )
+        return
+
+    clear_result()
+
+    image_url = data.get("url")
+
+    result_text.insert(
+        tk.END,
+        "Astronomy Picture of the Day\n"
+    )
+
+    result_text.insert(tk.END, "-" * 60 + "\n")
+
+    result_text.insert(
+        tk.END,
+        f"Titel: {data.get('title')}\n"
+    )
+
+    result_text.insert(
+        tk.END,
+        f"Datum: {data.get('date')}\n"
+    )
+
+    result_text.insert(
+        tk.END,
+        f"Type: {data.get('media_type')}\n"
+    )
+
+    result_text.insert(
+        tk.END,
+        f"URL: {image_url}\n\n"
+    )
+
+    result_text.insert(
+        tk.END,
+        data.get("explanation")
+    )
+
+    if data.get("media_type") == "image":
+        show_image_from_url(image_url)
 
 
 root = tk.Tk()
