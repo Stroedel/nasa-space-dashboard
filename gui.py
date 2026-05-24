@@ -42,6 +42,24 @@ def show_image_from_url(url):
         image_label.image = None
 
 
+def display_current_image():
+    if not current_images:
+        return
+
+    image_url = current_images[current_index]
+    show_image_from_url(image_url)
+
+    clear_result()
+
+    result_text.insert(
+        tk.END,
+        f"Afbeelding {current_index + 1} van {len(current_images)}\n"
+    )
+
+    result_text.insert(tk.END, "-" * 60 + "\n")
+    result_text.insert(tk.END, f"URL: {image_url}\n")
+
+
 root = tk.Tk()
 root.title("NASA Space Dashboard")
 
