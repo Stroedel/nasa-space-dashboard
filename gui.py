@@ -296,4 +296,21 @@ image_year_entry.grid(
 
 image_year_entry.insert(0, "1969")
 
+search_button = tk.Button(
+    control_frame,
+    text="NASA afbeeldingen zoeken",
+    command=search_images,
+    width=24,
+    bg="#2563eb",
+    fg="white"
+)
+
+search_button.grid(
+    row=2,
+    column=1,
+    columnspan=2,
+    padx=8,
+    pady=8
+)
+
 root.mainloop()
