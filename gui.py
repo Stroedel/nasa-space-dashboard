@@ -264,4 +264,8 @@ search_label = tk.Label(
 )
 search_label.grid(row=0, column=1, padx=8, pady=4)
 
+search_entry = tk.Entry(control_frame, width=28)
+search_entry.grid(row=1, column=1, padx=8, pady=4)
+search_entry.insert(0, "moon")
+
 root.mainloop()
