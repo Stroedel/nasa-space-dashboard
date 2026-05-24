@@ -336,4 +336,18 @@ nav_frame = tk.Frame(
 
 nav_frame.pack(pady=5)
 
+previous_button = tk.Button(
+    nav_frame,
+    text="⬅ Vorige afbeelding",
+    command=previous_image,
+    width=22,
+    bg="#334155",
+    fg="white"
+)
+
+previous_button.pack(
+    side=tk.LEFT,
+    padx=10
+)
+
 root.mainloop()
