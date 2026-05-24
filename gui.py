@@ -173,7 +173,16 @@ def search_images():
 
     display_current_image()
 
+def next_image():
+    global current_index
 
+    if current_images:
+        current_index = (
+            current_index + 1
+        ) % len(current_images)
+
+        display_current_image()
+        
 root = tk.Tk()
 root.title("NASA Space Dashboard")
 
