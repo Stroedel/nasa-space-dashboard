@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from urllib.request import urlopen
 from io import BytesIO
-
+from datetime import date, timedelta
 from PIL import Image, ImageTk
 
 from nasa_client import NasaClient
@@ -173,6 +173,104 @@ def search_images():
 
     display_current_image()
 
+def show_asteroids_week():
+    start = date.today()
+    end = start + timedelta(days=6)
+
+    start_date = start.isoformat()
+    end_date = end.isoformat()
+
+    clear_result()
+
+    image_label.pack_forget()
+    result_text.config(height=24)
+
+    result_text.insert(
+        tk.END,
+        f"Bezig met asteroïden ophalen van {start_date} tot {end_date}...\n\n"
+    )
+
+    root.update()
+
+    data = client.get_asteroids_week(
+        start_date,
+        end_date
+    )
+
+    clear_result()
+
+    if not data:
+        result_text.insert(
+            tk.END,
+            "Geen data ontvangen van NASA.\n"
+        )
+        return
+
+    near_objects = data.get(
+        "near_earth_objects",
+        {}
+    )
+
+    total = sum(
+        len(objects)
+        for objects in near_objects.values()
+    )
+
+    result_text.insert(
+        tk.END,
+        f"Asteroïden van {start_date} tot {end_date}: {total}\n\n"
+    )
+
+    for day, objects in near_objects.items():
+        result_text.insert(
+            tk.END,
+            f"Datum: {day}\n"
+        )
+
+        result_text.insert(
+            tk.END,
+            "-" * 60 + "\n"
+        )
+
+        for asteroid in objects[:3]:
+            diameter = asteroid[
+                "estimated_diameter"
+            ]["meters"]
+
+            approach_data = asteroid.get(
+                "close_approach_data",
+                []
+            )
+
+            result_text.insert(
+                tk.END,
+                f"Naam: {asteroid['name']}\n"
+            )
+
+            result_text.insert(
+                tk.END,
+                f"Gevaarlijk: "
+                f"{asteroid['is_potentially_hazardous_asteroid']}\n"
+            )
+
+            result_text.insert(
+                tk.END,
+                f"Diameter: "
+                f"{diameter['estimated_diameter_min']:.2f} - "
+                f"{diameter['estimated_diameter_max']:.2f} meter\n"
+            )
+
+            if approach_data:
+                approach = approach_data[0]
+
+                result_text.insert(
+                    tk.END,
+                    f"Afstand: "
+                    f"{approach['miss_distance']['kilometers']} km\n"
+                )
+
+            result_text.insert(tk.END, "\n")
+
 def next_image():
     global current_index
 
@@ -182,7 +280,7 @@ def next_image():
         ) % len(current_images)
 
         display_current_image()
-        
+
 root = tk.Tk()
 root.title("NASA Space Dashboard")
 
